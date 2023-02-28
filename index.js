@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import $sequelize from './db/index.js';
 import * as models from './db/models/index.js';
 
+import errorsMiddleware from './middlewares/errorsMiddleware.js';
 import router from './routers/index.js';
 
 const PORT = dotenv.config().parsed.PORT || 5000;
@@ -11,6 +12,7 @@ const app = new express();
 
 app.use(express.json());
 app.use('/api', router);
+app.use(errorsMiddleware);
 
 const start = async () => {
   try {
