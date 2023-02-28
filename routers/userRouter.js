@@ -9,3 +9,4 @@ router.post('/logout', UserController.logout);
 router.get('/refresh', UserController.refreshToken);
 router.get('/:id', UserController.getOne);
 router.get('/all', UserController.getAll);
+router.get('/activate/:id', UserController.activate);

@@ -12,4 +12,8 @@ export class ApiError extends Error {
   static Unauthorization (message, errors) {
     return new ApiError(401, message, errors);
   }
+
+  static BadEmail (message, errors) {
+    return new ApiError(401, message, errors);
+  }
 }

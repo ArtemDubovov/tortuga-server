@@ -1,4 +1,4 @@
-import * as UserServices from './../services/userServices.js';
+import * as UserService from '../services/userService.js';
 
 class UserController {
   async registration (req, res, next) {
@@ -6,7 +6,7 @@ class UserController {
 
       const {email, password} = req.body;
 
-      const userData = await UserServices.registration(email, password);
+      const userData = await UserService.registration(email, password);
 
       res.json(userData);
     } catch (e) {
@@ -47,6 +47,14 @@ class UserController {
   }
 
   async getOne (req, res, next) {
+    try {
+
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async activate (req, res, next) {
     try {
 
     } catch (e) {
