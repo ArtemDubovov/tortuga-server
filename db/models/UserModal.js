@@ -7,6 +7,10 @@ const UserModal = $sequelize.define('User', {
     defaultValue: UUIDV4(),
     primaryKey: true
   },
+  isActivate: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false
