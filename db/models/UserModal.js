@@ -26,6 +26,10 @@ const UserModal = $sequelize.define('User', {
   about: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  activationLink: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
 });
 
