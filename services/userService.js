@@ -22,7 +22,7 @@ const registration = async (email, password) => {
   const salt = await bcrypt.genSalt(+HASH_KEY);
   const passwordHash = await bcrypt.hash(password, salt);
   const activationId = uuid.v4();
-  const activationLink = `${DEFAULT_URL}:${PORT}/api/activate/${activationId}`;
+  const activationLink = `${DEFAULT_URL}:${PORT}/api/user/activate/${activationId}`;
 
   await sendMail(email, activationLink);
 
@@ -40,6 +40,16 @@ const registration = async (email, password) => {
   };
 }
 
+const activateUser = async (activationLink) => {
+  const user = await UserModal.findOne({where: {activationLink}});
+  if (!user) {
+    throw ApiError.Unauthorization('Ссылка не действительна.');
+  }
+  await user.update({activationLink: '', isActivate: true});
+  await user.save();
+}
+
 export {
-  registration
+  registration,
+  activateUser
 }

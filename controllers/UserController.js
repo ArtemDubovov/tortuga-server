@@ -1,4 +1,7 @@
 import * as UserService from '../services/userService.js';
+import * as dotenv from 'dotenv';
+
+const {HOMEPAGE} = dotenv.config().parsed;
 
 class UserController {
   async registration (req, res, next) {
@@ -56,6 +59,11 @@ class UserController {
 
   async activate (req, res, next) {
     try {
+      const link = req.params.id;
+
+      await UserService.activateUser(link);
+
+      res.redirect(HOMEPAGE);
 
     } catch (e) {
       next(e);
