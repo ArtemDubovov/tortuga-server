@@ -6,8 +6,8 @@ import * as uuid from 'uuid';
 import * as tokenService from './tokenService.js';
 
 import { TokenModal, UserModal } from "../db/models/index.js"
-import { ApiError } from "../excepted/ApiError.js";
-import { UserDBO } from '../DBO/userDbo.js';
+import { ApiError } from "../exceptions/ApiError.js";
+import { UserDto } from '../dtos/userDto.js';
 import { sendMail } from './mailService.js';
 
 const { HASH_KEY, DEFAULT_URL, PORT } = dotenv.config().parsed;
@@ -28,14 +28,14 @@ const registration = async (email, password) => {
 
   const user = await UserModal.create({email, password: passwordHash, role: 'USER', activationLink: activationId});
 
-  const userDBO = new UserDBO(user.dataValues);
+  const userDto = new UserDto(user.dataValues);
 
-  const tokens = tokenService.getTokens(userDBO);
+  const tokens = tokenService.getTokens(userDto);
 
   await TokenModal.create({user: user.dataValues._id, refreshToken: tokens.refreshToken});
 
   return {
-    ...userDBO,
+    ...userDto,
     tokens
   };
 }
@@ -49,7 +49,34 @@ const activateUser = async (activationLink) => {
   await user.save();
 }
 
+const login = async (email, password) => {
+  const user = await UserModal.findOne({where: {email}});
+  if (!user) {
+    throw ApiError.BadRequest('Введены не верно почта или пароль.');
+  }
+
+  const isCorrectPassword = await bcrypt.compare(password, user.dataValues.password);
+
+  if (!isCorrectPassword) {
+    throw ApiError.BadRequest('Введены не верно почта или пароль.');
+  }
+
+  if (!user.dataValues.isActivate) {
+    throw ApiError.BadRequest('Аккаунт не активирован.');
+  }
+
+  const userDto = new UserDto(user.dataValues);
+  const tokens = tokenService.getTokens(userDto);
+
+  return {
+    userDto,
+    tokens
+  }
+
+}
+
 export {
   registration,
-  activateUser
+  activateUser,
+  login
 }

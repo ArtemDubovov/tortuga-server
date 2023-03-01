@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
-import { ApiError } from '../excepted/ApiError.js';
+import { ApiError } from '../exceptions/ApiError.js';
 
 const {MAIL_HOST, MAIL_PORT, MAIL_LOGIN, MAIL_PASSWORD} = dotenv.config().parsed;
 

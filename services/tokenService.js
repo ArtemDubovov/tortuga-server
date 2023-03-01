@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { ApiError } from '../excepted/ApiError.js';
+import { ApiError } from '../exceptions/ApiError.js';
 
 const {JWT_ACCESS_SECRET, JWT_REFRESH_SECRET} = dotenv.config().parsed;
 
