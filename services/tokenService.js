@@ -1,19 +1,22 @@
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import { ApiError } from '../exceptions/ApiError.js';
+import UserModal from '../db/models/UserModal.js';
+import TokenModal from '../db/models/TokenModal.js';
+import { tokenModal } from '../../../../autorization/server/models/TokenModal.js';
 
 const {JWT_ACCESS_SECRET, JWT_REFRESH_SECRET} = dotenv.config().parsed;
 
 const getTokens = (data) => {
-  const acessToken = jwt.sign({...data}, JWT_ACCESS_SECRET, {expiresIn: '1d'});
+  const accessToken = jwt.sign({...data}, JWT_ACCESS_SECRET, {expiresIn: '1d'});
   const refreshToken = jwt.sign({...data}, JWT_REFRESH_SECRET, {expiresIn: '30d'});
   return {
-    acessToken,
+    accessToken,
     refreshToken
   }
 }
 
-const checkValidateToken = (token) => {
+const validateAccessToken = (token) => {
   try {
     const isValidate = jwt.verify(token, JWT_ACCESS_SECRET);
     if (isValidate) {
@@ -25,7 +28,44 @@ const checkValidateToken = (token) => {
   }
 }
 
+const validateRefreshToken = async (token) => {
+  try {
+    const isValidate = jwt.verify(token, JWT_REFRESH_SECRET);
+    if (isValidate) {
+      return true;
+    }
+    const findToken = await tokenModal.findOne({where: {refreshToken: token}});
+    if (findToken) {
+      await findToken.destroy();
+    }
+    return false;
+  } catch (e) {
+    throw ApiError.Unauthorization('Нет прав для доступа.');
+  }
+}
+
+const saveToken = async (userId, refreshToken) => {
+  console.log(userId, refreshToken);
+  const user = await UserModal.findOne({_id: userId});
+
+  if (!user) {
+    throw ApiError.Unauthorization('Нет прав доступа.');
+  }
+
+  const allTokens = await TokenModal.findAll({user: userId});
+  const token = await TokenModal.findOne({user: userId});
+
+  if (!token || allTokens.length < 3) {
+    await TokenModal.create({user: userId, refreshToken});
+  } else {
+    await token.destroy();
+    await TokenModal.create({user: userId, refreshToken});
+  }
+}
+
 export {
   getTokens,
-  checkValidateToken
+  validateAccessToken,
+  validateRefreshToken,
+  saveToken
 }

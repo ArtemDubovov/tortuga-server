@@ -27,12 +27,10 @@ const registration = async (email, password) => {
   await sendMail(email, activationLink);
 
   const user = await UserModal.create({email, password: passwordHash, role: 'USER', activationLink: activationId});
-
   const userDto = new UserDto(user.dataValues);
-
   const tokens = tokenService.getTokens(userDto);
 
-  await TokenModal.create({user: user.dataValues._id, refreshToken: tokens.refreshToken});
+  await tokenService.saveToken(user.dataValues._id, tokens.refreshToken);
 
   return {
     ...userDto,
@@ -68,8 +66,10 @@ const login = async (email, password) => {
   const userDto = new UserDto(user.dataValues);
   const tokens = tokenService.getTokens(userDto);
 
+  await tokenService.saveToken(user.dataValues._id, tokens.refreshToken);
+
   return {
-    userDto,
+    ...userDto,
     tokens
   }
 
