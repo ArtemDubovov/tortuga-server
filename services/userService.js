@@ -3,7 +3,9 @@ import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import * as uuid from 'uuid';
 
-import { UserModal } from "../db/models/index.js"
+import * as tokenService from './tokenService.js';
+
+import { TokenModal, UserModal } from "../db/models/index.js"
 import { ApiError } from "../excepted/ApiError.js";
 import { UserDBO } from '../DBO/userDbo.js';
 import { sendMail } from './mailService.js';
@@ -26,9 +28,16 @@ const registration = async (email, password) => {
 
   const user = await UserModal.create({email, password: passwordHash, role: 'USER', activationLink: activationId});
 
+  const userDBO = new UserDBO(user.dataValues);
 
+  const tokens = tokenService.getTokens(userDBO);
 
-  return new UserDBO(user.dataValues);
+  await TokenModal.create({user: user.dataValues._id, refreshToken: tokens.refreshToken});
+
+  return {
+    ...userDBO,
+    tokens
+  };
 }
 
 export {

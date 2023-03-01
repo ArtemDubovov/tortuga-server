@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import { ApiError } from '../excepted/ApiError';
+import { ApiError } from '../excepted/ApiError.js';
 
 const {JWT_ACCESS_SECRET, JWT_REFRESH_SECRET} = dotenv.config().parsed;
 
 const getTokens = (data) => {
-  const acessToken = jwt.sign(data, JWT_ACCESS_SECRET, {expiresIn: '1d'});
-  const refreshToken = jwt.sign(data, JWT_REFRESH_SECRET, {expiresIn: '30d'});
+  const acessToken = jwt.sign({...data}, JWT_ACCESS_SECRET, {expiresIn: '1d'});
+  const refreshToken = jwt.sign({...data}, JWT_REFRESH_SECRET, {expiresIn: '30d'});
   return {
     acessToken,
     refreshToken

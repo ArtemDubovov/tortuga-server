@@ -3,7 +3,7 @@ import $sequelize from "../index.js";
 import UserModal from "./UserModal.js";
 
 const TokenModal = $sequelize.define('Token', {
-  token: {
+  refreshToken: {
     type: DataTypes.STRING,
     allowNull: false
   },
