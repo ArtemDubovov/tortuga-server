@@ -5,7 +5,8 @@ const UserModal = $sequelize.define('User', {
   _id: {
     type: DataTypes.UUID,
     defaultValue: UUIDV4(),
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
   isActivate: {
     type: DataTypes.BOOLEAN,
@@ -13,7 +14,8 @@ const UserModal = $sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   password: {
     type: DataTypes.STRING,
