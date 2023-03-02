@@ -5,7 +5,8 @@ import UserModal from "./UserModal.js";
 const TokenModal = $sequelize.define('Token', {
   refreshToken: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    primaryKey: true
   },
   user: {
     type: DataTypes.UUID,

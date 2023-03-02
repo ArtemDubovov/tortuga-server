@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import { ApiError } from '../exceptions/ApiError.js';
 import UserModal from '../db/models/UserModal.js';
 import TokenModal from '../db/models/TokenModal.js';
-import { tokenModal } from '../../../../autorization/server/models/TokenModal.js';
 
 const {JWT_ACCESS_SECRET, JWT_REFRESH_SECRET} = dotenv.config().parsed;
 
@@ -45,7 +44,6 @@ const validateRefreshToken = async (token) => {
 }
 
 const saveToken = async (userId, refreshToken) => {
-  console.log(userId, refreshToken);
   const user = await UserModal.findOne({_id: userId});
 
   if (!user) {
@@ -63,9 +61,21 @@ const saveToken = async (userId, refreshToken) => {
   }
 }
 
+const removeToken = async (refreshToken) => {
+  if (!refreshToken) {
+    throw ApiError.Unauthorization('Вы уже вышли из аккаунта.');
+  }
+  const tokenData = await TokenModal.findOne({where: {refreshToken}});
+  if (!tokenData) {
+    throw ApiError.Unauthorization('Вы уже вышли из аккаунта.');
+  }
+  await tokenData.destroy();
+}
+
 export {
   getTokens,
   validateAccessToken,
   validateRefreshToken,
-  saveToken
+  saveToken,
+  removeToken
 }

@@ -8,6 +8,7 @@ import * as tokenService from './tokenService.js';
 import { TokenModal, UserModal } from "../db/models/index.js"
 import { ApiError } from "../exceptions/ApiError.js";
 import { UserDto } from '../dtos/userDto.js';
+import { UserTokenDto } from './../dtos/userTokenDto.js'
 import { sendMail } from './mailService.js';
 
 const { HASH_KEY, DEFAULT_URL, PORT } = dotenv.config().parsed;
@@ -28,7 +29,8 @@ const registration = async (email, password) => {
 
   const user = await UserModal.create({email, password: passwordHash, role: 'USER', activationLink: activationId});
   const userDto = new UserDto(user.dataValues);
-  const tokens = tokenService.getTokens(userDto);
+  const userTokenDto = new UserTokenDto(user.dataValues);
+  const tokens = tokenService.getTokens(userTokenDto);
 
   await tokenService.saveToken(user.dataValues._id, tokens.refreshToken);
 
@@ -64,7 +66,8 @@ const login = async (email, password) => {
   }
 
   const userDto = new UserDto(user.dataValues);
-  const tokens = tokenService.getTokens(userDto);
+  const userTokenDto = new UserTokenDto(user.dataValues);
+  const tokens = tokenService.getTokens(userTokenDto);
 
   await tokenService.saveToken(user.dataValues._id, tokens.refreshToken);
 
@@ -75,8 +78,13 @@ const login = async (email, password) => {
 
 }
 
+const logout = async (refreshToken) => {
+  await tokenService.removeToken(refreshToken);
+}
+
 export {
   registration,
   activateUser,
-  login
+  login,
+  logout
 }

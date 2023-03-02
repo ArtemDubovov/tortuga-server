@@ -5,14 +5,19 @@ import * as models from './db/models/index.js';
 
 import errorsMiddleware from './middlewares/errorsMiddleware.js';
 import router from './routers/index.js';
+import cookieParser from 'cookie-parser';
 
 const PORT = dotenv.config().parsed.PORT || 5000;
 
 const app = new express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api', router);
 app.use(errorsMiddleware);
+app.use('/*', (req, res) => {
+  res.json({message: 'Не верный запрос.'});
+})
 
 const start = async () => {
   try {

@@ -11,6 +11,7 @@ class UserController {
 
       const userData = await UserService.registration(email, password);
 
+      res.cookie('refreshToken', userData.tokens.refreshToken,  {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
       res.json(userData);
     } catch (e) {
       next(e);
@@ -21,6 +22,7 @@ class UserController {
     try {
       const {email, password} = req.body;
       const userData = await UserService.login(email, password);
+      res.cookie('refreshToken', userData.tokens.refreshToken,  {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
       res.json(userData);
     } catch (e) {
       next(e);
@@ -29,7 +31,10 @@ class UserController {
 
   async logout (req, res, next) {
     try {
-
+      const {refreshToken} = req.cookies;
+      await UserService.logout(refreshToken);
+      res.clearCookie('refreshToken');
+      res.json({message: 'success'});
     } catch (e) {
       next(e);
     }
@@ -37,7 +42,6 @@ class UserController {
 
   async refreshToken (req, res, next) {
     try {
-
     } catch (e) {
       next(e);
     }
@@ -45,7 +49,8 @@ class UserController {
 
   async getAll (req, res, next) {
     try {
-
+      const {userId} = req;
+      res.json({message: userId});
     } catch (e) {
       next(e);
     }
@@ -53,7 +58,6 @@ class UserController {
 
   async getOne (req, res, next) {
     try {
-
     } catch (e) {
       next(e);
     }
