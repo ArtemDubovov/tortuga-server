@@ -33,7 +33,7 @@ const validateRefreshToken = async (token) => {
     if (isValidate) {
       return true;
     }
-    const findToken = await tokenModal.findOne({where: {refreshToken: token}});
+    const findToken = await TokenModal.findOne({where: {refreshToken: token}});
     if (findToken) {
       await findToken.destroy();
     }

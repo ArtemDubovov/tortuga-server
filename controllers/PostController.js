@@ -19,6 +19,12 @@ class PostController {
     try {
       const {userId} = req;
       await UserService.checkUserId(userId);
+
+      const {id} = req.params;
+      await PostService.remove(id);
+      
+      res.json({message: 'success'});
+
     } catch (e) {
       next(e);
     }
@@ -28,6 +34,11 @@ class PostController {
     try {
       const {userId} = req;
       await UserService.checkUserId(userId);
+
+      const {title, littleContent, content, imageTitle} = req.body;
+      const {id} = req.params;
+      const postData = await PostService.update(id, title, littleContent, content, imageTitle);
+      res.json(postData);
     } catch (e) {
       next(e);
     }
