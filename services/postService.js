@@ -1,4 +1,4 @@
-import { PostModal } from "../db/models/index.js"
+import { CommentModal, PostModal } from "../db/models/index.js"
 import { ApiError } from "../exceptions/ApiError.js";
 
 const create = async (userId, title, littleContent, content, imageTitle) => {
@@ -22,6 +22,8 @@ const remove = async (_id) => {
   if (!post) {
     throw ApiError.BadRequest('Такого поста не существует.');
   }
+  await CommentModal.destroy({where: {post: _id}});
+
   await post.destroy();
 }
 
