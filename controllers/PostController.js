@@ -1,39 +1,52 @@
+import * as UserService from '../services/userService.js';
+import * as PostService from '../services/postService.js';
+
 class PostController {
-  async create() {
+  async create(req, res, next) {
     try {
+      const {userId} = req;
+      await UserService.checkUserId(userId);
 
     } catch (e) {
       next(e);
     }
   }
 
-  async remove() {
+  async remove(req, res, next) {
     try {
-
+      const {userId} = req;
+      await UserService.checkUserId(userId);
     } catch (e) {
       next(e);
     }
   }
 
-  async update() {
+  async update(req, res, next) {
     try {
-
+      const {userId} = req;
+      await UserService.checkUserId(userId);
     } catch (e) {
       next(e);
     }
   }
 
-  async get() {
+  async get(req, res, next) {
     try {
-
+      const {userId} = req;
+      await UserService.checkUserId(userId);
     } catch (e) {
       next(e);
     }
   }
 
-  async getAll() {
+  async getAll(req, res, next) {
     try {
+      const {userId} = req;
+      await UserService.checkUserId(userId);
 
+      
+      const postsData = await PostService.getAll();
+      res.json(postsData);
     } catch (e) {
       next(e);
     }
