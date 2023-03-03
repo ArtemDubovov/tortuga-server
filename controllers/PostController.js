@@ -7,6 +7,9 @@ class PostController {
       const {userId} = req;
       await UserService.checkUserId(userId);
 
+      const {title, littleContent, content, imageTitle} = req.body;
+      const postData = await PostService.create(userId, title, littleContent, content, imageTitle);
+      res.json(postData);
     } catch (e) {
       next(e);
     }
