@@ -1,5 +1,6 @@
 import * as UserService from '../services/userService.js';
 import * as dotenv from 'dotenv';
+import { ApiError } from '../exceptions/ApiError.js';
 
 const {HOMEPAGE} = dotenv.config().parsed;
 
@@ -50,6 +51,8 @@ class UserController {
   async getAll (req, res, next) {
     try {
       const {userId} = req;
+      await UserService.checkUserId(userId);
+
       res.json({message: userId});
     } catch (e) {
       next(e);

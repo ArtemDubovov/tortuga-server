@@ -82,9 +82,23 @@ const logout = async (refreshToken) => {
   await tokenService.removeToken(refreshToken);
 }
 
+const getAll = async () => {
+
+}
+
+const checkUserId = async (userId) => {
+  console.log('Work check user');
+  const user = await UserModal.findOne({where: {_id: userId}});
+  if (!user) {
+    throw ApiError.Unauthorization('Нет доступа.', []);
+  }
+}
+
 export {
   registration,
   activateUser,
   login,
-  logout
+  logout,
+  getAll,
+  checkUserId
 }
