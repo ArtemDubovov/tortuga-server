@@ -1,14 +1,14 @@
 import { Router } from "express";
 import PostController from "../controllers/PostController.js";
 
-import { registrationValidation, loginValidation } from "../validations/userValidation.js";
+import { postCreateValidation, postUpdateValidation } from "../validations/postValidation.js";
 import validationsMiddleware from "../middlewares/validationsMiddleware.js";
 import checkAuthMiddleware from "../middlewares/checkAuthMiddleware.js";
 
 export const router = new Router();
 
-router.post('/', checkAuthMiddleware, validationsMiddleware, PostController.create);
-router.get('/all', checkAuthMiddleware, validationsMiddleware, PostController.getAll);
-router.put('/:id', checkAuthMiddleware, validationsMiddleware, PostController.update);
-router.delete('/:id', checkAuthMiddleware, validationsMiddleware, PostController.remove);
-router.get('/:id', checkAuthMiddleware, validationsMiddleware, PostController.get);
+router.post('/', checkAuthMiddleware, postCreateValidation, validationsMiddleware, PostController.create);
+router.get('/all', checkAuthMiddleware, PostController.getAll);
+router.put('/:id', checkAuthMiddleware, postUpdateValidation, validationsMiddleware, PostController.update);
+router.delete('/:id', checkAuthMiddleware, PostController.remove);
+router.get('/:id', checkAuthMiddleware, PostController.get);
