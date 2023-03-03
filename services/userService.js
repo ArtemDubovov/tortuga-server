@@ -83,13 +83,21 @@ const logout = async (refreshToken) => {
 }
 
 const getAll = async () => {
+  const users = await UserModal.findAll();
+  return users;
+}
 
+const getOne = async (_id) => {
+  const user = await UserModal.findOne({where: {_id}});
+  if (user) {
+    return new UserDto(user);
+  }
+  return user;
 }
 
 const checkUserId = async (userId) => {
-  console.log('Work check user');
   const user = await UserModal.findOne({where: {_id: userId}});
-  if (!user) {
+  if (!user || !user.dataValues.isActivate) {
     throw ApiError.Unauthorization('Нет доступа.', []);
   }
 }
@@ -100,5 +108,6 @@ export {
   login,
   logout,
   getAll,
-  checkUserId
+  checkUserId,
+  getOne
 }

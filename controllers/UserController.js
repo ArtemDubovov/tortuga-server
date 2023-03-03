@@ -53,7 +53,9 @@ class UserController {
       const {userId} = req;
       await UserService.checkUserId(userId);
 
-      res.json({message: userId});
+      const usersData = await UserService.getAll();
+
+      res.json({...usersData});
     } catch (e) {
       next(e);
     }
@@ -61,6 +63,13 @@ class UserController {
 
   async getOne (req, res, next) {
     try {
+      const {userId} = req;
+      await UserService.checkUserId(userId);
+
+      const {id} = req.params;
+
+      const userData = await UserService.getOne(id);
+      res.json({...userData})
     } catch (e) {
       next(e);
     }
