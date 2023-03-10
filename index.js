@@ -9,6 +9,7 @@ import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
 const PORT = dotenv.config().parsed.PORT || 5000;
+const { COOKIE_KEY } = dotenv.config().parsed
 
 const app = new express();
 
@@ -18,7 +19,7 @@ const corsConfig = {
 };
 app.use(cors(corsConfig));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(COOKIE_KEY));
 app.use('/api', router);
 app.use(errorsMiddleware);
 app.use('/*', (req, res) => {
