@@ -24,7 +24,7 @@ app.use('/*', (req, res) => {
 const start = async () => {
   try {
     await $sequelize.authenticate();
-    await $sequelize.sync({force: true});
+    await $sequelize.sync();
     console.log('Подключение к БД прошло успешно.');
     app.listen(PORT, (err) => {
       err ? console.log(`Возникла ошибка при запуске сервера - ${err}`) : console.log(`Сервер запущен на порте ${PORT}`);
