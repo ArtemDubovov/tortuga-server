@@ -11,10 +11,15 @@ import { UserDto } from '../dtos/userDto.js';
 import { UserTokenDto } from './../dtos/userTokenDto.js'
 import { sendMail } from './mailService.js';
 
-const { HASH_KEY, DEFAULT_URL, PORT } = dotenv.config().parsed;
+const { HASH_KEY, DEFAULT_URL, PORT, KEY_SITE } = dotenv.config().parsed;
 
-const registration = async (email, password) => {
+const registration = async (email, password, key) => {
   const candidate = await UserModal.findOne({where: {email}});
+
+  if (!key || !key.trim().toLowerCase() === KEY_SITE) {
+    console.log(key, key.trim().toLowerCase(), KEY_SITE);
+    throw ApiError.BadRequest(`Проверьте правильность введенных данных.`);
+  }
 
   if (candidate) {
     throw ApiError.BadRequest(`Пользователь с почтой ${email} уже зарегистрирован.`);

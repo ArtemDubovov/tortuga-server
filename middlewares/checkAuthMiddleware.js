@@ -6,6 +6,7 @@ import { checkUserId } from '../services/userService.js';
 
 export default (req, res, next) => {
   const token = req.cookies.refreshToken;
+  console.log(req.cookies);
   if (!token) {
     throw ApiError.Unauthorization('Нет доступа.', ['token']);
   }

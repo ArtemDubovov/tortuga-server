@@ -8,9 +8,11 @@ class UserController {
   async registration (req, res, next) {
     try {
 
-      const {email, password} = req.body;
+      const {email, password, key} = req.body;
 
-      const userData = await UserService.registration(email, password);
+      console.log(email, password, key);
+
+      const userData = await UserService.registration(email, password, key);
 
       res.cookie('refreshToken', userData.tokens.refreshToken,  {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
       res.json(userData);
@@ -21,8 +23,8 @@ class UserController {
 
   async login (req, res, next) {
     try {
-      const {email, password} = req.body;
-      const userData = await UserService.login(email, password);
+      const {email, password, key} = req.body;
+      const userData = await UserService.login(email, password, key);
       res.cookie('refreshToken', userData.tokens.refreshToken,  {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
       res.json(userData);
     } catch (e) {

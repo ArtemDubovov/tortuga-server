@@ -14,6 +14,6 @@ export class ApiError extends Error {
   }
 
   static BadEmail (message, errors) {
-    return new ApiError(401, message, errors);
+    return new ApiError(400, message, errors);
   }
 }
