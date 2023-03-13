@@ -16,7 +16,7 @@ const { HASH_KEY, DEFAULT_URL, PORT, KEY_SITE } = dotenv.config().parsed;
 const registration = async (email, password, key) => {
   const candidate = await UserModal.findOne({where: {email}});
 
-  if (!key || !key.trim().toLowerCase() === KEY_SITE) {
+  if (!key || key.trim().toLowerCase() !== KEY_SITE) {
     console.log(key, key.trim().toLowerCase(), KEY_SITE);
     throw ApiError.BadRequest(`Проверьте правильность введенных данных.`);
   }
@@ -54,16 +54,21 @@ const activateUser = async (activationLink) => {
   await user.save();
 }
 
-const login = async (email, password) => {
+const login = async (email, password, key) => {
+  console.log(key, KEY_SITE, key.trim().toLowerCase() === KEY_SITE);
+  if (!key || key.trim().toLowerCase() !== KEY_SITE) {
+    console.log(key, key.trim().toLowerCase(), KEY_SITE);
+    throw ApiError.BadRequest(`Проверьте правильность введенных данных.`);
+  }
   const user = await UserModal.findOne({where: {email}});
   if (!user) {
-    throw ApiError.BadRequest('Введены не верно почта или пароль.');
+    throw ApiError.BadRequest('Проверьте правильность введенных данных.');
   }
 
   const isCorrectPassword = await bcrypt.compare(password, user.dataValues.password);
 
   if (!isCorrectPassword) {
-    throw ApiError.BadRequest('Введены не верно почта или пароль.');
+    throw ApiError.BadRequest('Проверьте правильность введенных данных.');
   }
 
   if (!user.dataValues.isActivate) {
