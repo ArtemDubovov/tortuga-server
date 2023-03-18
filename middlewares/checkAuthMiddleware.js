@@ -5,8 +5,8 @@ import { ApiError } from "../exceptions/ApiError.js";
 import { checkUserId } from '../services/userService.js';
 
 export default (req, res, next) => {
-  const {refreshToken} = req.body;
-  console.log(req.body);
+  const {refreshToken} = req.params;
+  console.log(req.params);
   if (!refreshToken) {
     throw ApiError.Unauthorization('Нет доступа.', ['token']);
   }
