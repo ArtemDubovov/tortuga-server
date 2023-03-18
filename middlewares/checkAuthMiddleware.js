@@ -5,12 +5,11 @@ import { ApiError } from "../exceptions/ApiError.js";
 import { checkUserId } from '../services/userService.js';
 
 export default (req, res, next) => {
-  const token = req.cookies.refreshToken;
-  console.log(req.cookies);
-  if (!token) {
+  const {refreshToken} = req.body;
+  if (!refreshToken) {
     throw ApiError.Unauthorization('Нет доступа.', ['token']);
   }
-  const tokenData = jwt.verify(token, dotenv.config().parsed.JWT_REFRESH_SECRET);
+  const tokenData = jwt.verify(refreshToken, dotenv.config().parsed.JWT_REFRESH_SECRET);
   if (!tokenData || !tokenData._id) {
     throw ApiError.Unauthorization('Нет доступа.', ['data']);
   }
@@ -25,6 +24,5 @@ export default (req, res, next) => {
   })
 
   req.userId = tokenData._id;
-
 
 }
