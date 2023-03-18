@@ -8,7 +8,7 @@ import checkAuthMiddleware from "../middlewares/checkAuthMiddleware.js";
 export const router = new Router();
 
 router.post('/', checkAuthMiddleware, postCreateValidation, validationsMiddleware, PostController.create);
-router.get('/all', checkAuthMiddleware, PostController.getAll);
+router.post('/all', checkAuthMiddleware, PostController.getAll);
 router.put('/:id', checkAuthMiddleware, postUpdateValidation, validationsMiddleware, PostController.update);
 router.delete('/:id', checkAuthMiddleware, PostController.remove);
-router.get('/:id', checkAuthMiddleware, PostController.get);
+router.post('/:id', checkAuthMiddleware, PostController.get);
